@@ -14,7 +14,7 @@ fn main() {
     let argc = argv.len();
 
     if argc <= 1 {
-        println!("usage: bbfi [filename]\n\npositional arguments:\n   filename    file that will be interpreted! (must have B.F. code)");
+        println!("usage: bbfi [filename]\n\npositional arguments:\n	filename	file that will be interpreted! (must have B.F. code)");
         exit(0);
     } else {
         let filepath: &Path = Path::new(&argv[1]);
@@ -24,8 +24,8 @@ fn main() {
             exit(1) 
         }
         
-        let everything: String = read_to_string(&filepath)
-                                 .expect("Couldn't read file's content"); 
+        let everything: String = read_to_string(filepath)
+                                 .expect("Couldn't read file's content");
 
         let bfinstructions: Vec<char> = everything.chars()
                                                 .filter(|x| {['>', '<', '[', ']', '.', ',', '+', '-'].contains(&x)})
