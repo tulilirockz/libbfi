@@ -1,8 +1,3 @@
-// Objectives
-// - Read CLI -> get args!
-// - Check if file actually exists and get it's a real file
-// - Read only B.F. instructions from the file
-// - Import necessary functions from other file to actually interpret it
 use std::env;
 use std::path::Path;
 use std::process::exit;
@@ -19,11 +14,11 @@ fn main() {
     } else {
         let filepath: &Path = Path::new(&argv[1]);
 
-        if !filepath.exists() { 
-            println!("File '{}' does not exist or is not a valid file.", &argv[1]); 
-            exit(1) 
+        if !filepath.exists() {
+            println!("File '{}' does not exist or is not a valid file.", &argv[1]);
+            exit(1)
         }
-        
+
         let everything: String = read_to_string(filepath)
                                  .expect("Couldn't read file's content");
 

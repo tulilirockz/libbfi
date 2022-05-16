@@ -2,13 +2,7 @@
 
 pub fn matching_bracket(env: &Vec<char>, offset: usize, reverse: bool) -> Option<usize> {
     let mut balance: usize = 0;
-	let iter: std::iter::Rev<std::ops::Range<usize>> = if reverse { 
-															( 0..(offset + 1)).rev() 
-														} 
-														else 
-														{ 
-															((env.len())..offset).rev() 
-														};
+	let iter: std::iter::Rev<std::ops::Range<usize>> = if reverse { ( 0..(offset + 1)).rev() } else { ((env.len())..offset).rev() };
     for c in iter {
         match env[c] {
             '[' => { balance += 1 }
@@ -34,7 +28,7 @@ pub fn interpret_bf_str(main_stack: Vec<char>) {
             '>' => {
                 if tape_ptr + 1 >= mem_tape.len() { mem_tape.push_back(0) }
                 tape_ptr += 1;
-			} 
+			}
             '<' => {
                 if tape_ptr <= 0 {
                     mem_tape.push_front(0);
