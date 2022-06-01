@@ -1,22 +1,38 @@
-#![forbid(unsafe_code)]
+use std::collections::VecDeque;
+use std::io::{Write,stdin,stdout};
 
 pub fn matching_bracket(env: &Vec<char>, offset: usize, reverse: bool) -> Option<usize> {
-    let mut balance: usize = 0;
-	let iter: std::iter::Rev<std::ops::Range<usize>> = if reverse { ( 0..(offset + 1)).rev() } else { ((env.len())..offset).rev() };
-    for c in iter {
-        match env[c] {
-            '[' => { balance += 1 }
-            ']' => { balance -= 1 }
-			_ => {}
+    let mut balance = 0;
+    if reverse {
+        let iterator = (0..(offset + 1)).rev();
+        for c in iterator {
+            match env[c] {
+                '[' => { balance += 1 }
+                ']' => { balance -= 1 }
+                _ => {}
+            }
+            if balance == 0 {
+                return Some(c);
+            }
         }
-        if balance == 0 { return Some(c); }
+        return None;
+    } else {
+        let iterator = offset..(env.len());
+        for c in iterator {
+            match env[c] {
+                '[' => { balance += 1 }
+                ']' => { balance -= 1 }
+                _ => {}
+            }
+            if balance == 0 {
+                return Some(c);
+            }
+        }
+        return None;
     }
-    return None;
 }
 
 pub fn interpret_bf_str(main_stack: Vec<char>) {
-    use std::collections::VecDeque;
-    use std::io::{Write,stdin};
     let mut mem_tape: VecDeque<u8> = VecDeque::from([0x00]);
     let mut tape_ptr: usize = 0;
     let mut inst_ptr: usize = 0;
@@ -30,19 +46,16 @@ pub fn interpret_bf_str(main_stack: Vec<char>) {
                 tape_ptr += 1;
 			}
             '<' => {
-                if tape_ptr <= 0 {
-                    mem_tape.push_front(0);
-                }
+                if tape_ptr <= 0 { mem_tape.push_front(0); }
                 tape_ptr -= 1;
             }
             '.' => {
                 print!("{}", mem_tape[tape_ptr] as char);
-                std::io::stdout().flush().unwrap();
+                stdout().flush().unwrap();
             }
             ',' => {
                 let mut input: String = String::new();
-                let mut _cool_string: usize;
-                _cool_string = stdin().read_line(&mut input).ok().expect("Failed to read line");
+                stdin().read_line(&mut input).ok().expect("Failed to read line");
                 mem_tape[tape_ptr] = input.bytes().next().expect("no byte read");
             }
             '[' => {
@@ -52,8 +65,7 @@ pub fn interpret_bf_str(main_stack: Vec<char>) {
             }
             ']' => {
                 if mem_tape[tape_ptr] != 0 {
-                    inst_ptr = matching_bracket(&main_stack, inst_ptr, true).expect("Matching bracket could not be found at instruction number {ins_pointer}");
-                    continue;
+                    inst_ptr = matching_bracket(&main_stack, inst_ptr, true).expect("Matching bracket could not be found at instruction number {inst_ptr}");
                 }
             }
             _ => {}
