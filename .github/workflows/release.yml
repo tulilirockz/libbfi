@@ -32,14 +32,14 @@ jobs:
       - uses: actions/checkout@v3
       - uses: cachix/install-nix-action@v12
       - name: Build Nix package
-        run: |
-          nix --extra-experimental-features flakes --extra-experimental-features nix-command build .
-          sha256sum ./result/rbfi > ./result/SHA256SUM
+        run: nix --extra-experimental-features flakes --extra-experimental-features nix-command build .
       - name: Install github CLI
         run: |
           apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
           apt-add-repository https://cli.github.com/packages
           apt update && apt install gh
+          tree .
+          sha256sum ./result/rbfi > ./result/SHA256SUM
       - name: Upload Binary
         env:
           GITHUB_TOKEN: ${{ github.token }}
