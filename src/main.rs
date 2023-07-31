@@ -1,4 +1,6 @@
-use std::{env, fs::read_to_string, path::Path, process::exit};
+use std::{collections::VecDeque, env, fs::read_to_string, path::Path, process::exit};
+
+use bf_interpreter::{StandardBrainfuck, StdProgram};
 mod bf_interpreter;
 
 fn main() {
@@ -9,11 +11,15 @@ fn main() {
         exit(0);
     }
 
-    let bfinstructions: Vec<char> = read_to_string(Path::new(&argv[1]))
-        .expect("Couldn't read file's content")
-        .chars()
-        .filter(|x| ['>', '<', '[', ']', '.', ',', '+', '-'].contains(&x))
-        .collect();
+    let mut main_cli = StandardBrainfuck {
+        instruction_stack: read_to_string(Path::new(&argv[1]))
+            .expect("Couldn't read file's content")
+            .chars()
+            .filter(|x| ['>', '<', '[', ']', '.', ',', '+', '-'].contains(&x))
+            .collect(),
+        memory: VecDeque::from([0x00]),
+        ..Default::default()
+    };
 
-    bf_interpreter::interpret_bf_str(bfinstructions);
+    main_cli.init_interpretation();
 }

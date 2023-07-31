@@ -1,25 +1,79 @@
+use std::collections::VecDeque;
 use std::io::{stdin, stdout, Write};
 
-pub fn interpret_bf_str(main_stack: Vec<char>) {
-    let mut memory: [u8; 3000] = [0x00; 3000];
-    let (mut pointer, mut instruction) = (0, 0);
+/// A Standard brainfuck interpreter
+///
+/// This provides an implementation of the `StdProgram` trait for the Brainfuck
+/// language.
+/// Uses a Double Queue Vector to represent the memory tape and a Vector to store the
+/// Brainfuck instructions.
+/// Allows for unlimited memory and memory wrapping
+#[derive(Default)]
+pub struct StandardBrainfuck {
+    pub memory: VecDeque<u8>,
+    pub instruction_stack: Vec<char>,
+    pub pointer: usize,
+    pub instruction: usize,
+}
 
-    while instruction != main_stack.len() {
-        match main_stack[instruction] {
+pub trait StdProgram {
+    fn matching_bracket(instruction_set: &Vec<char>, offset: usize) -> Option<usize> {
+        let mut balance = 0;
+        let iterator = offset..(instruction_set.len());
+        for c in iterator {
+            match &instruction_set[c] {
+                '[' => balance += 1,
+                ']' => balance -= 1,
+                _ => {}
+            }
+            if balance == 0 {
+                return Some(c);
+            }
+        }
+        return None;
+    }
+    fn matching_bracket_reversed(env: &Vec<char>, offset: usize) -> Option<usize> {
+        let mut balance = 0;
+        let iterator = (0..(offset + 1)).rev();
+        for c in iterator {
+            match env[c] {
+                '[' => balance += 1,
+                ']' => balance -= 1,
+                _ => {}
+            }
+            if balance == 0 {
+                return Some(c);
+            }
+        }
+        return None;
+    }
+    fn next_instruction(&mut self);
+    fn init_interpretation(&mut self);
+}
+
+impl StdProgram for StandardBrainfuck {
+    fn next_instruction(&mut self) {
+        match self.instruction_stack[self.instruction] {
             '+' => {
-                memory[pointer] = memory[pointer].wrapping_add(1);
+                self.memory[self.pointer] = self.memory[self.pointer].wrapping_add(1);
             }
             '-' => {
-                memory[pointer] = memory[pointer].wrapping_sub(1);
+                self.memory[self.pointer] = self.memory[self.pointer].wrapping_sub(1);
             }
             '>' => {
-                pointer += 1;
+                if self.pointer + 1 >= self.memory.len() {
+                    self.memory.push_back(0)
+                }
+                self.pointer += 1;
             }
             '<' => {
-                pointer -= 1;
+                if self.pointer <= 0 {
+                    self.memory.push_front(0);
+                }
+                self.pointer -= 1;
             }
             '.' => {
-                print!("{}", memory[pointer] as char);
+                print!("{}", self.memory[self.pointer] as char);
                 stdout().flush().unwrap();
             }
             ',' => {
@@ -28,56 +82,37 @@ pub fn interpret_bf_str(main_stack: Vec<char>) {
                     .read_line(&mut input)
                     .ok()
                     .expect("Failed to read line");
-                memory[pointer] = input.bytes().next().expect("no byte read");
+                self.memory[self.pointer] = input.bytes().next().expect("no byte read");
             }
             '[' => {
-                if memory[pointer] == 0 {
-                    instruction = matching_bracket(&main_stack, instruction).expect(
+                if self.memory[self.pointer] == 0 {
+                    self.instruction = StandardBrainfuck::matching_bracket(
+                        &self.instruction_stack,
+                        self.instruction,
+                    )
+                    .expect(
                         "Matching bracket could not be found at instruction number {instruction}",
                     );
                 }
             }
             ']' => {
-                if memory[pointer] != 0 {
-                    instruction = matching_bracket_reversed(&main_stack, instruction).expect(
+                if self.memory[self.pointer] != 0 {
+                    self.instruction = StandardBrainfuck::matching_bracket_reversed(
+                        &self.instruction_stack,
+                        self.instruction,
+                    )
+                    .expect(
                         "Matching bracket could not be found at instruction number {instruction}",
                     );
                 }
             }
             _ => {}
         }
-        instruction += 1;
+        self.instruction += 1;
     }
-}
-
-fn matching_bracket_reversed(env: &Vec<char>, offset: usize) -> Option<usize> {
-    let mut balance = 0;
-    let iterator = (0..(offset + 1)).rev();
-    for c in iterator {
-        match env[c] {
-            '[' => balance += 1,
-            ']' => balance -= 1,
-            _ => {}
-        }
-        if balance == 0 {
-            return Some(c);
+    fn init_interpretation(&mut self) {
+        while self.instruction != self.instruction_stack.len() {
+            self.next_instruction()
         }
     }
-    return None;
-}
-
-fn matching_bracket(env: &Vec<char>, offset: usize) -> Option<usize> {
-    let mut balance = 0;
-    let iterator = offset..(env.len());
-    for c in iterator {
-        match env[c] {
-            '[' => balance += 1,
-            ']' => balance -= 1,
-            _ => {}
-        }
-        if balance == 0 {
-            return Some(c);
-        }
-    }
-    return None;
 }
