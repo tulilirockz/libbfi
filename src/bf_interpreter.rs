@@ -1,8 +1,7 @@
-use std::collections::VecDeque;
 use std::io::{stdin, stdout, Write};
 
 pub fn interpret_bf_str(main_stack: Vec<char>) {
-    let mut mem_tape: VecDeque<u8> = VecDeque::from([0x00]);
+    let mut mem_tape: [u8; 3000] = [0x00; 3000];
     let mut tape_ptr: usize = 0;
     let mut inst_ptr: usize = 0;
 
@@ -15,15 +14,9 @@ pub fn interpret_bf_str(main_stack: Vec<char>) {
                 mem_tape[tape_ptr] = mem_tape[tape_ptr].wrapping_sub(1);
             }
             '>' => {
-                if tape_ptr + 1 >= mem_tape.len() {
-                    mem_tape.push_back(0)
-                }
                 tape_ptr += 1;
             }
             '<' => {
-                if tape_ptr <= 0 {
-                    mem_tape.push_front(0);
-                }
                 tape_ptr -= 1;
             }
             '.' => {
