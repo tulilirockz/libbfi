@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/tulilirockz/rBFI/compare/v1.0.0...v1.0.1) (2023-07-31)
+
+
+### Bug Fixes
+
+* **gh:** generate shasum at proper place ([499d6bc](https://github.com/tulilirockz/rBFI/commit/499d6bc3cf7b303d88830c5a643a563d09f656c3))
+* **gh:** SHA256SUM + build properly uploads now! ([f978e5e](https://github.com/tulilirockz/rBFI/commit/f978e5e89e579cd8d1ea531379b0b5beff6cf261))
+
 ## 1.0.0 (2023-07-31)
 
 
