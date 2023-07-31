@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "rs-brainfuck-interpreter"
-version = "0.1.0"
+name = "rbfi"
+version = "1.0.0"
