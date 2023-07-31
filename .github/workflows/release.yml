@@ -15,8 +15,36 @@ jobs:
       tag: ${{ steps.release-please.outputs.tag_name }}
       upload_url: ${{ steps.release-please.outputs.upload_url }}
     steps:
-      - uses: google-github-actions/release-please-action@v3
-        id: release-please
-        with:
-          release-type: node
-          package-name: release-please-action
+    - uses: google-github-actions/release-please-action@v3
+      id: release-please
+      with:
+        release-type: node
+        package-name: release-please-action
+    - uses: cachix/install-nix-action@v12
+    - name: Build Nix package
+      run: |
+        nix-build . -A defaultPackage.x86_64-linux
+        sha256sum ./result/rbfi > ./result/SHA256SUM
+    - name: Install github CLI
+      run: |
+        apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
+        apt-add-repository https://cli.github.com/packages
+        apt update && apt install gh
+    - name: Upload Binary
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        gh release upload \
+          ${{ needs.release-please.outputs.tag }} \
+          ./result/rbfi \
+          --repo ${{ github.repository_owner }}/${{ github.event.repository.name }} \
+          --clobber  
+    - name: Upload SHA256SUM
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        gh release upload \
+          ${{ needs.release-please.outputs.tag }} \
+          ./result/SHA256SUM \
+          --repo ${{ github.repository_owner }}/${{ github.event.repository.name }} \
+          --clobber
