@@ -1,26 +1,25 @@
 use std::io::{stdin, stdout, Write};
 
 pub fn interpret_bf_str(main_stack: Vec<char>) {
-    let mut mem_tape: [u8; 3000] = [0x00; 3000];
-    let mut tape_ptr: usize = 0;
-    let mut inst_ptr: usize = 0;
+    let mut memory: [u8; 3000] = [0x00; 3000];
+    let (mut pointer, mut instruction) = (0, 0);
 
-    while inst_ptr != main_stack.len() {
-        match main_stack[inst_ptr] {
+    while instruction != main_stack.len() {
+        match main_stack[instruction] {
             '+' => {
-                mem_tape[tape_ptr] = mem_tape[tape_ptr].wrapping_add(1);
+                memory[pointer] = memory[pointer].wrapping_add(1);
             }
             '-' => {
-                mem_tape[tape_ptr] = mem_tape[tape_ptr].wrapping_sub(1);
+                memory[pointer] = memory[pointer].wrapping_sub(1);
             }
             '>' => {
-                tape_ptr += 1;
+                pointer += 1;
             }
             '<' => {
-                tape_ptr -= 1;
+                pointer -= 1;
             }
             '.' => {
-                print!("{}", mem_tape[tape_ptr] as char);
+                print!("{}", memory[pointer] as char);
                 stdout().flush().unwrap();
             }
             ',' => {
@@ -29,25 +28,25 @@ pub fn interpret_bf_str(main_stack: Vec<char>) {
                     .read_line(&mut input)
                     .ok()
                     .expect("Failed to read line");
-                mem_tape[tape_ptr] = input.bytes().next().expect("no byte read");
+                memory[pointer] = input.bytes().next().expect("no byte read");
             }
             '[' => {
-                if mem_tape[tape_ptr] == 0 {
-                    inst_ptr = matching_bracket(&main_stack, inst_ptr).expect(
-                        "Matching bracket could not be found at instruction number {ins_pointer}",
+                if memory[pointer] == 0 {
+                    instruction = matching_bracket(&main_stack, instruction).expect(
+                        "Matching bracket could not be found at instruction number {instruction}",
                     );
                 }
             }
             ']' => {
-                if mem_tape[tape_ptr] != 0 {
-                    inst_ptr = matching_bracket_reversed(&main_stack, inst_ptr).expect(
-                        "Matching bracket could not be found at instruction number {inst_ptr}",
+                if memory[pointer] != 0 {
+                    instruction = matching_bracket_reversed(&main_stack, instruction).expect(
+                        "Matching bracket could not be found at instruction number {instruction}",
                     );
                 }
             }
             _ => {}
         }
-        inst_ptr += 1;
+        instruction += 1;
     }
 }
 
