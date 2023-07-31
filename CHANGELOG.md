@@ -15,6 +15,40 @@
 * **gh:** generate shasum at proper place ([499d6bc](https://github.com/tulilirockz/rBFI/commit/499d6bc3cf7b303d88830c5a643a563d09f656c3))
 * **gh:** SHA256SUM + build properly uploads now! ([f978e5e](https://github.com/tulilirockz/rBFI/commit/f978e5e89e579cd8d1ea531379b0b5beff6cf261))
 
+## [1.2.0](https://github.com/tulilirockz/rbfi/releases/tag/v1.2.0) - 2023-07-31
+
+### Added
+- *(release)* add github releases package action
+- add nix and melange package formats + gh action
+- static memory in order to be more faithful to initial implementation
+
+### Fixed
+- *(gh)* use rust-specific release action
+- *(gh)* SHA256SUM + build properly uploads now!
+- *(gh)* generate shasum at proper place
+- run nix release only if release-please makes release
+- fix copyright license and holder
+
+### Other
+- *(develop)* release 1.0.1
+- *(gh)* install gh cli properly
+- test out nix build in separate nix action
+- *(develop)* release 1.0.0
+- BSD 3 license
+- release action and gh metadata
+- [**breaking**] modular design for brainfuck interpreter
+- better variable naming and less variables in main func
+- proper metadata naming
+- separate functions for matching brackets
+- Fix matching_bracket not working at all (add redundant code tho.)
+- Fixed identation and comments
+- Merge branch 'develop' of https://github.com/Pranprest/brainfuck-interpreter into develop
+- Fixed README.md not being a markdown file
+- Remove redundancy in matching_brackets and rearranged use statements
+- Project metadata, license and readme
+- added main code - first interpretation
+- added sample brainfk scripts
+
 ## 1.0.0 (2023-07-31)
 
 
