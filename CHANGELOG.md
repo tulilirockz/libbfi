@@ -49,6 +49,45 @@
 - added main code - first interpretation
 - added sample brainfk scripts
 
+## [1.2.0](https://github.com/tulilirockz/rBFI/releases/tag/v1.2.0) - 2023-07-31
+
+### Added
+- *(release)* add github releases package action
+- add nix and melange package formats + gh action
+- static memory in order to be more faithful to initial implementation
+
+### Fixed
+- implement release-plz
+- *(gh)* move to release-plz action
+- *(gh)* use rust-specific release action
+- *(gh)* SHA256SUM + build properly uploads now!
+- *(gh)* generate shasum at proper place
+- run nix release only if release-please makes release
+- fix copyright license and holder
+
+### Other
+- *(typo)* typo in license field
+- add metadata to publish crate to crates.io
+- *(develop)* release 1.0.2
+- *(develop)* release 1.0.1
+- *(gh)* install gh cli properly
+- test out nix build in separate nix action
+- *(develop)* release 1.0.0
+- BSD 3 license
+- release action and gh metadata
+- [**breaking**] modular design for brainfuck interpreter
+- better variable naming and less variables in main func
+- proper metadata naming
+- separate functions for matching brackets
+- Fix matching_bracket not working at all (add redundant code tho.)
+- Fixed identation and comments
+- Merge branch 'develop' of https://github.com/Pranprest/brainfuck-interpreter into develop
+- Fixed README.md not being a markdown file
+- Remove redundancy in matching_brackets and rearranged use statements
+- Project metadata, license and readme
+- added main code - first interpretation
+- added sample brainfk scripts
+
 ## 1.0.0 (2023-07-31)
 
 
