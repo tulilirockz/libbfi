@@ -35,11 +35,14 @@ jobs:
         run: nix --extra-experimental-features flakes --extra-experimental-features nix-command build .
       - name: Install github CLI
         run: |
-          apt-key adv --keyserver keyserver.ubuntu.com --recv-key C99B11DEB97541F0
-          apt-add-repository https://cli.github.com/packages
-          apt update && apt install gh
+          type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+          && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+          && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+          && sudo apt update \
+          && sudo apt install gh -y
           tree .
-          sha256sum ./result/rbfi > ./result/SHA256SUM
+          sha256sum ./result/rbfi > ./SHA256SUM
       - name: Upload Binary
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -55,6 +58,6 @@ jobs:
         run: |
           gh release upload \
             ${{ needs.release-please.outputs.tag }} \
-            ./result/SHA256SUM \
+            ./SHA256SUM \
             --repo ${{ github.repository_owner }}/${{ github.event.repository.name }} \
             --clobber
