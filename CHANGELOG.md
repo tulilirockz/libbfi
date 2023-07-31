@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/tulilirockz/rBFI/compare/v1.0.1...v1.0.2) (2023-07-31)
+
+
+### Bug Fixes
+
+* **gh:** use rust-specific release action ([36c24da](https://github.com/tulilirockz/rBFI/commit/36c24da9bfe37b25cc1889933ccbe29e812bfdf0))
+
 ## [1.0.1](https://github.com/tulilirockz/rBFI/compare/v1.0.0...v1.0.1) (2023-07-31)
 
 
