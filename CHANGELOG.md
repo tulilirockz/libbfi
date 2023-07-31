@@ -88,6 +88,11 @@
 - added main code - first interpretation
 - added sample brainfk scripts
 
+## [1.2.1](https://github.com/tulilirockz/rBFI/compare/v1.2.0...v1.2.1) - 2023-07-31
+
+### Other
+- release
+
 ## 1.0.0 (2023-07-31)
 
 
