@@ -88,6 +88,12 @@
 - added main code - first interpretation
 - added sample brainfk scripts
 
+## [1.2.1](https://codeberg.org/tulilirockz/RBFI/compare/v1.2.0...v1.2.1) - 2023-08-03
+
+### Other
+- separate functions and everything onto separate traits and structs
+- release
+
 ## 1.0.0 (2023-07-31)
 
 
