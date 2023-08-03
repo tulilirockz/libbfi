@@ -1,6 +1,6 @@
 use std::{env, fs::read_to_string, path::Path, process::exit};
 
-use rbfi::interpreter::std_bf::*;
+use rbfi::interpreter::{ook::Ook, std_bf::*};
 
 fn main() {
     let argv: Vec<String> = env::args().collect();
@@ -10,13 +10,11 @@ fn main() {
         exit(0);
     }
 
-    let mut main_cli: StandardBrainfuck = StandardBrainfuck::new(
+    let mut main_cli = Ook::new(
         read_to_string(Path::new(&argv[1]))
             .expect("Couldn't read file's content")
             .chars()
-            .filter(|x| ['>', '<', '[', ']', '.', ',', '+', '-'].contains(&x))
             .collect(),
     );
-
-    main_cli.run_full_stack();
+    main_cli.filter_characters().run_full_stack();
 }

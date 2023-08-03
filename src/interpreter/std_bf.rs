@@ -1,15 +1,12 @@
 use crate::util;
-use std::collections::VecDeque;
+
 use std::io::{stdin, stdout, Write};
 
 /// A Standard brainfuck interpreter
 ///
 /// This provides an implementation of the `StdProgram` trait for the Brainfuck
 /// language.
-/// Uses a Double Queue Vector to represent the memory tape and a Vector to store the
-/// Brainfuck instructions.
-/// Allows for unlimited memory and memory wrapping
-/// Consists of X instructions:
+/// Consists of 8 instructions:
 /// + - Increment the memory cell under the pointer
 /// - - Decrement the memory cell under the pointer
 /// > - Move the pointer to the right
@@ -18,18 +15,18 @@ use std::io::{stdin, stdout, Write};
 /// ] - Jump back to the matching bracket
 /// . - Output the character signified by the cell at the pointer
 /// , - Input a character and store it in the cell at the pointer
-#[derive(Default)]
 pub struct StandardBrainfuck {
-    pub memory: VecDeque<u8>,
-    pub pointer: usize,
-    pub instruction: usize,
-    pub instruction_stack: Vec<char>,
+    memory: [u8; 30000],
+    pointer: usize,
+    instruction: usize,
+    instruction_stack: Vec<char>,
 }
 
 pub trait StdProgram: StdOperations {
-    fn new(instruction_set: Vec<char>) -> Self;
-    fn next_instruction(&mut self) -> &mut Self;
+    fn new(instruction_set: String) -> Self;
+    fn next_instruction_in_stack(&mut self) -> &mut Self;
     fn run_full_stack(&mut self);
+    fn filter_characters(&mut self) -> &mut Self;
 }
 pub trait StdOperations {
     fn op_ptr_left(&mut self);
@@ -43,15 +40,15 @@ pub trait StdOperations {
 }
 
 impl StdProgram for StandardBrainfuck {
-    fn new(instruction_stack: Vec<char>) -> Self {
+    fn new(instruction_stack: String) -> Self {
         return Self {
             instruction: 0,
             pointer: 0,
-            memory: VecDeque::from([0x00]),
-            instruction_stack: instruction_stack,
+            memory: [0x00; 30000],
+            instruction_stack: instruction_stack.chars().collect(),
         };
     }
-    fn next_instruction(&mut self) -> &mut Self {
+    fn next_instruction_in_stack(&mut self) -> &mut Self {
         match self.instruction_stack[self.instruction] {
             '+' => self.op_add_to_cell(),
             '-' => self.op_sub_from_cell(),
@@ -68,8 +65,13 @@ impl StdProgram for StandardBrainfuck {
     }
     fn run_full_stack(&mut self) {
         while self.instruction != self.instruction_stack.len() {
-            self.next_instruction();
+            self.next_instruction_in_stack();
         }
+    }
+    fn filter_characters(&mut self) -> &mut Self {
+        self.instruction_stack
+            .retain(|x| ['>', '<', '[', ']', '.', ',', '+', '-'].contains(&x));
+        return self;
     }
 }
 
@@ -81,15 +83,9 @@ impl StdOperations for StandardBrainfuck {
         self.memory[self.pointer] = self.memory[self.pointer].wrapping_sub(1);
     }
     fn op_ptr_left(&mut self) {
-        if self.pointer + 1 >= self.memory.len() {
-            self.memory.push_back(0)
-        }
         self.pointer += 1;
     }
     fn op_ptr_right(&mut self) {
-        if self.pointer <= 0 {
-            self.memory.push_front(0);
-        }
         self.pointer -= 1;
     }
     fn op_print_cell_as_char(&self) {
