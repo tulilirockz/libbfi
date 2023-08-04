@@ -23,11 +23,12 @@ pub struct StandardBrainfuck {
 }
 
 pub trait StdParser {
-    fn new(instruction_stack: String) -> Self;
+    fn new(instruction_stack: &impl AsRef<str>) -> Self;
     fn next_instruction_in_stack(&mut self) -> &mut Self;
     fn run_full_stack(&mut self);
     fn filter_characters(&mut self) -> Result<&mut Self, String>;
 }
+
 pub trait StdOperators {
     fn op_ptr_left(&mut self);
     fn op_ptr_right(&mut self);
@@ -40,12 +41,12 @@ pub trait StdOperators {
 }
 
 impl StdParser for StandardBrainfuck {
-    fn new(instruction_stack: String) -> Self {
+    fn new(instruction_stack: &impl AsRef<str>) -> Self {
         return Self {
             instruction: 0,
             pointer: 0,
             memory: [0x00; 30000],
-            instruction_stack: instruction_stack.chars().collect(),
+            instruction_stack: instruction_stack.as_ref().chars().collect(),
         };
     }
     fn next_instruction_in_stack(&mut self) -> &mut Self {
