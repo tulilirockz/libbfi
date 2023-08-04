@@ -6,3 +6,6 @@ description = "Extendable brainfuck interpreter library"
 license = "BSD-3-Clause"
 keywords = [ "extendable" , "brainfuck" , "interpreter" , "library"]
 categories = ["simulation"]
+authors = ["Tulili <tulilirockz.pub@gmail.com>"]
+docs = "https://docs.rs/libbfi"
+homepage = "https://codeberg.org/tulilirockz/libbfi"
