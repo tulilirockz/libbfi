@@ -1,20 +1,28 @@
-use std::{env, fs::read_to_string, path::Path, process::exit};
+use std::fs::read_to_string;
 
+use clap::Parser;
 use rbfi::interpreter::{ook::Ook, std_bf::*};
 
+#[derive(Parser)]
+struct MainCli {
+    type_of_program: String,
+    path: std::path::PathBuf,
+}
+
 fn main() {
-    let argv: Vec<String> = env::args().collect();
+    let args = MainCli::parse();
 
-    if argv.len() <= 1 {
-        println!("usage: rbfi [filename]\n\npositional arguments:\n\nfilename\tfile that will be interpreted");
-        exit(0);
+    let usage_data: String = read_to_string(args.path).expect("Couldn't read file's content");
+
+    match args.type_of_program.as_str() {
+        "ook" => Ook::new(usage_data)
+            .filter_characters()
+            .expect("Failed to parse characters")
+            .run_full_stack(),
+        "std" => StandardBrainfuck::new(usage_data)
+            .filter_characters()
+            .expect("Failed parsing characters")
+            .run_full_stack(),
+        _ => panic!("Failed to find a valid dialect!"),
     }
-
-    let mut main_cli = Ook::new(
-        read_to_string(Path::new(&argv[1]))
-            .expect("Couldn't read file's content")
-            .chars()
-            .collect(),
-    );
-    main_cli.filter_characters().run_full_stack();
 }

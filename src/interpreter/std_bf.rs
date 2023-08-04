@@ -22,13 +22,13 @@ pub struct StandardBrainfuck {
     instruction_stack: Vec<char>,
 }
 
-pub trait StdProgram: StdOperations {
-    fn new(instruction_set: String) -> Self;
+pub trait StdParser {
+    fn new(instruction_stack: String) -> Self;
     fn next_instruction_in_stack(&mut self) -> &mut Self;
     fn run_full_stack(&mut self);
-    fn filter_characters(&mut self) -> &mut Self;
+    fn filter_characters(&mut self) -> Result<&mut Self, String>;
 }
-pub trait StdOperations {
+pub trait StdOperators {
     fn op_ptr_left(&mut self);
     fn op_ptr_right(&mut self);
     fn op_add_to_cell(&mut self);
@@ -39,7 +39,7 @@ pub trait StdOperations {
     fn op_jump_backwards(&mut self);
 }
 
-impl StdProgram for StandardBrainfuck {
+impl StdParser for StandardBrainfuck {
     fn new(instruction_stack: String) -> Self {
         return Self {
             instruction: 0,
@@ -68,14 +68,14 @@ impl StdProgram for StandardBrainfuck {
             self.next_instruction_in_stack();
         }
     }
-    fn filter_characters(&mut self) -> &mut Self {
+    fn filter_characters(&mut self) -> Result<&mut Self, String> {
         self.instruction_stack
             .retain(|x| ['>', '<', '[', ']', '.', ',', '+', '-'].contains(&x));
-        return self;
+        return Ok(self);
     }
 }
 
-impl StdOperations for StandardBrainfuck {
+impl StdOperators for StandardBrainfuck {
     fn op_add_to_cell(&mut self) {
         self.memory[self.pointer] = self.memory[self.pointer].wrapping_add(1);
     }

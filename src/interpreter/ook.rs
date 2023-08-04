@@ -1,4 +1,4 @@
-use crate::interpreter::std_bf::{StdOperations, StdProgram};
+use crate::interpreter::std_bf::{StdOperators, StdParser};
 use crate::util::matching::{find_matching_substring, find_matching_substring_reversed};
 use std::io::{stdin, stdout, Write};
 
@@ -9,7 +9,7 @@ pub struct Ook {
     instruction_stack: Vec<char>,
 }
 
-impl StdProgram for Ook {
+impl StdParser for Ook {
     fn new(instruction_stack: String) -> Self {
         return Self {
             instruction: 0,
@@ -44,14 +44,19 @@ impl StdProgram for Ook {
             self.next_instruction_in_stack();
         }
     }
-    fn filter_characters(&mut self) -> &mut Self {
+    fn filter_characters(&mut self) -> Result<&mut Self, String> {
         self.instruction_stack
             .retain(|x| ['.', '!', '?', '!'].contains(&x));
-        return self;
+        if !self.instruction_stack.len() % 2 == 0 {
+            return Err(String::from(
+                "Failed to properly parse string! - Number of instructions is not a multiple of two",
+            ));
+        }
+        return Ok(self);
     }
 }
 
-impl StdOperations for Ook {
+impl StdOperators for Ook {
     fn op_add_to_cell(&mut self) {
         self.memory[self.pointer] = self.memory[self.pointer].wrapping_add(1);
     }
