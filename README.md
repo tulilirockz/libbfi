@@ -1,13 +1,16 @@
-# RBFI
-A simple and fast brainfuck interpreter written in Rust!
+# LibBFI
 
-## Building
-Run ```cargo build --release``` to build the file with the compiler's optimizations!
+A library for interpreting and parsing Brainfuck code. Includes support for the Ook! dialect and possibly more TODO!
 
-## Running
-Run the compiled binary directily w/ whatever brainf*ck file you want to run
+```rust
+use libbfi::interpreter::std_bf::*;
 
-```./rbfi cool.bf```
+fn main() {
+    let program: &str = ">++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-]<+.";
 
-## Notes
-- This was just made as a fun project, most likely won't be mantained for long
+    StandardBrainfuck::new(&program)
+        .filter_characters()
+        .expect("Failed parsing characters")
+        .run_full_stack();
+}
+```

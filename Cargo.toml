@@ -1,11 +1,8 @@
 [package]
-name = "rbfi"
+name = "libbfi"
 version = "1.2.1"
 edition = "2021"
-description = "Extendable brainfuck interpreter written in Rust"
+description = "Extendable brainfuck interpreter library"
 license = "BSD-3-Clause"
-keywords = ["extendable","brainfuck","interpreter","wasm","cli"]
-categories = ["command-line-utilities"]
-
-[dependencies]
-clap = {version = "4.3.19", features = ["derive"]}
+keywords = [ "extendable" , "brainfuck" , "interpreter" , "library"]
+categories = ["simulation"]
