@@ -103,22 +103,24 @@ impl StdOperators for StandardBrainfuck {
     }
     fn op_jump_forwards(&mut self) {
         if self.memory[self.pointer] == 0 {
-            self.instruction = util::matching::find_matching_characters(
+            self.instruction = util::matching::find_matching(
                 &self.instruction_stack,
                 '[',
                 ']',
                 self.instruction,
+                false,
             )
             .expect("Matching bracket could not be found at instruction number {instruction}");
         }
     }
     fn op_jump_backwards(&mut self) {
         if self.memory[self.pointer] != 0 {
-            self.instruction = util::matching::find_matching_characters_reversed(
+            self.instruction = util::matching::find_matching(
                 &self.instruction_stack,
                 '[',
                 ']',
                 self.instruction,
+                true,
             )
             .expect("Matching bracket could not be found at instruction number {instruction}");
         }

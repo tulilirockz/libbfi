@@ -1,5 +1,5 @@
 use crate::interpreter::std_bf::{StdOperators, StdParser};
-use crate::util::matching::{find_matching_substring, find_matching_substring_reversed};
+use crate::util::matching::find_matching_substring;
 use std::io::{stdin, stdout, Write};
 
 pub struct Ook {
@@ -83,20 +83,24 @@ impl StdOperators for Ook {
     }
     fn op_jump_forwards(&mut self) {
         if self.memory[self.pointer] == 0 {
-            self.instruction =
-                find_matching_substring(&self.instruction_stack, "!?", "?!", self.instruction)
-                    .expect(
-                        "Matching bracket could not be found at instruction number {instruction}",
-                    );
-        }
-    }
-    fn op_jump_backwards(&mut self) {
-        if self.memory[self.pointer] != 0 {
-            self.instruction = find_matching_substring_reversed(
+            self.instruction = find_matching_substring(
                 &self.instruction_stack,
                 "!?",
                 "?!",
                 self.instruction,
+                false,
+            )
+            .expect("Matching bracket could not be found at instruction number {instruction}");
+        }
+    }
+    fn op_jump_backwards(&mut self) {
+        if self.memory[self.pointer] != 0 {
+            self.instruction = find_matching_substring(
+                &self.instruction_stack,
+                "!?",
+                "?!",
+                self.instruction,
+                true,
             )
             .expect("Matching bracket could not be found at instruction number {instruction}");
         }
