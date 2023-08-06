@@ -4,7 +4,6 @@ use crate::token::*;
 
 use std::io::{stdin, stdout, Write};
 
-use super::ook::Ook;
 /// A Standard brainfuck interpreter
 ///
 /// This provides an implementation of the `StdProgram` trait for the Brainfuck

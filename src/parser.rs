@@ -78,7 +78,6 @@ macro_rules! impl_generic_bf_op {
     };
 }
 
-pub(crate) use bf_session_type;
 pub(crate) use impl_generic_bf_op;
 
 use crate::token::TokenParseError;
