@@ -1,39 +1,72 @@
-use crate::interpreter::std_bf::{StdOperators, StdParser};
-use crate::util::matching::find_matching_substring;
+use crate::matching::*;
+use crate::parser::*;
+use crate::token::*;
 use std::io::{stdin, stdout, Write};
 
 pub struct Ook {
-    memory: [u8; 30000],
-    pointer: usize,
-    instruction: usize,
-    instruction_stack: Vec<char>,
+    pub memory: [u8; 30000],
+    pub pointer: usize,
+    pub instruction: usize,
+    pub instruction_stack: Vec<BFToken>,
 }
+impl_generic_bf_op!(Ook);
 
-impl StdParser for Ook {
-    fn new(instruction_stack: &impl AsRef<str>) -> Self {
+impl Parser for Ook {
+    fn new() -> Self {
         return Self {
             instruction: 0,
             pointer: 0,
             memory: [0x00; 30000],
-            instruction_stack: instruction_stack.as_ref().chars().collect(),
+            instruction_stack: Vec::new(),
         };
     }
-    fn next_instruction_in_stack(&mut self) -> &mut Self {
-        match format!(
-            "{}{}",
-            self.instruction_stack[self.instruction],
-            self.instruction_stack[self.instruction + 1]
-        )
-        .as_str()
-        {
-            ".." => self.op_add_to_cell(),
-            "!!" => self.op_sub_from_cell(),
-            "?." => self.op_ptr_left(),
-            ".?" => self.op_ptr_right(),
-            "!." => self.op_print_cell_as_char(),
-            ".!" => self.op_input_to_cell(),
-            "!?" => self.op_jump_forwards(),
-            "?!" => self.op_jump_backwards(),
+    fn add_tokens<T>(&mut self, iterator: T) -> Result<&mut Self, TokenParseError>
+    where
+        T: IntoIterator<Item = char>,
+    {
+        let iter_to_str: Vec<char> = iterator.into_iter().collect();
+        let count = iter_to_str.len();
+        if count % 2 != 0 {
+            return Err(TokenParseError);
+        }
+
+        let mut tokens: Vec<BFToken> = Vec::new();
+
+        for i in (0..count).step_by(2) {
+            let token_str = format!("{}{}", iter_to_str[i], iter_to_str[i + 1]);
+            tokens.push(match token_str.as_str() {
+                ".." => BFToken::CellAdd,
+                "!!" => BFToken::CellSubtract,
+                "?." => BFToken::PtrLeft,
+                ".?" => BFToken::PtrRight,
+                "!." => BFToken::Print,
+                ".!" => BFToken::Input,
+                "!?" => BFToken::JumpForwards,
+                "?!" => BFToken::JumpBackwards,
+                _ => return Err(TokenParseError),
+            });
+        }
+
+        self.instruction_stack.append(&mut tokens);
+        Ok(self)
+    }
+    fn clean_env(&mut self) -> &mut Self {
+        self.instruction = 0;
+        self.pointer = 0;
+        self.memory = [0x00; 30000];
+        self.instruction_stack = Vec::new();
+        return self;
+    }
+    fn next_instruction(&mut self) -> &mut Self {
+        match self.instruction_stack[self.instruction] {
+            BFToken::CellAdd => self.op_add_to_cell(),
+            BFToken::CellSubtract => self.op_sub_from_cell(),
+            BFToken::PtrLeft => self.op_ptr_left(),
+            BFToken::PtrRight => self.op_ptr_right(),
+            BFToken::Print => self.op_print_cell_as_char(),
+            BFToken::Input => self.op_input_to_cell(),
+            BFToken::JumpForwards => self.op_jump_forwards(),
+            BFToken::JumpBackwards => self.op_jump_backwards(),
             _ => { /*Gave a banana to the pointer!*/ }
         }
         self.instruction += 2;
@@ -41,68 +74,7 @@ impl StdParser for Ook {
     }
     fn run_full_stack(&mut self) {
         while self.instruction != self.instruction_stack.len() {
-            self.next_instruction_in_stack();
-        }
-    }
-    fn filter_characters(&mut self) -> Result<&mut Self, String> {
-        self.instruction_stack
-            .retain(|x| ['.', '!', '?', '!'].contains(&x));
-        if !self.instruction_stack.len() % 2 == 0 {
-            return Err(String::from(
-                "Failed to properly parse string! - Number of instructions is not a multiple of two",
-            ));
-        }
-        return Ok(self);
-    }
-}
-
-impl StdOperators for Ook {
-    fn op_add_to_cell(&mut self) {
-        self.memory[self.pointer] = self.memory[self.pointer].wrapping_add(1);
-    }
-    fn op_sub_from_cell(&mut self) {
-        self.memory[self.pointer] = self.memory[self.pointer].wrapping_sub(1);
-    }
-    fn op_ptr_left(&mut self) {
-        self.pointer -= 1;
-    }
-    fn op_ptr_right(&mut self) {
-        self.pointer += 1;
-    }
-    fn op_print_cell_as_char(&self) {
-        print!("{}", self.memory[self.pointer] as char);
-        stdout().flush().unwrap();
-    }
-    fn op_input_to_cell(&mut self) {
-        let mut input: String = String::new();
-        stdin()
-            .read_line(&mut input)
-            .ok()
-            .expect("Failed to read line");
-        self.memory[self.pointer] = input.bytes().next().expect("no byte read");
-    }
-    fn op_jump_forwards(&mut self) {
-        if self.memory[self.pointer] == 0 {
-            self.instruction = find_matching_substring(
-                &self.instruction_stack,
-                "!?",
-                "?!",
-                self.instruction,
-                false,
-            )
-            .expect("Matching bracket could not be found at instruction number {instruction}");
-        }
-    }
-    fn op_jump_backwards(&mut self) {
-        if self.memory[self.pointer] != 0 {
-            self.instruction = find_matching_substring(
-                &self.instruction_stack,
-                "!?",
-                "?!",
-                self.instruction,
-                true,
-            )
-            .expect("Matching bracket could not be found at instruction number {instruction}");
+            self.next_instruction();
         }
     }
 }
