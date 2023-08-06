@@ -94,6 +94,16 @@
 - separate functions and everything onto separate traits and structs
 - release
 
+## [2.0.0](https://github.com/tulilirockz/libbfi/compare/v1.2.1...v2.0.0) - 2023-08-06
+
+### Added
+- [**breaking**] use tokens and macros for generic parsing
+- [**breaking**] use tokens and macros for generic parsing
+
+### Other
+- move project to github
+- join reversed and regular matching functions
+
 ## 1.0.0 (2023-07-31)
 
 
