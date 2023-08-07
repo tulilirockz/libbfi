@@ -104,6 +104,20 @@
 - move project to github
 - join reversed and regular matching functions
 
+## [3.0.0](https://github.com/tulilirockz/LibBFI/compare/v2.0.0...v3.0.0) - 2023-08-07
+
+### Added
+- add support for custom brainfuck dialects
+- add blub and docs for all suported langs
+- session type-like implementation for any brainfuck derivation + respective docs
+
+### Fixed
+- make cutoff in multi_char_intruction languages actually work
+
+### Other
+- add docsrs documentation and module docs
+- *(release)* re-add release-plz to gh workflows
+
 ## 1.0.0 (2023-07-31)
 
 
