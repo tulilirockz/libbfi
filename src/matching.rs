@@ -59,11 +59,11 @@ pub fn find_matching_substring<T: Eq + Sized + Display>(
 
         let mogu = format!(
             "{}{}",
-            full_list.as_ref().get(index).expect("Failed amogus"),
+            full_list.as_ref().get(index).expect("Failed to read character in list"),
             full_list
                 .as_ref()
                 .get(index + 1)
-                .expect("Failed to read thing")
+                .expect("Failed to read character in list")
         );
 
         if mogu == substr_start {

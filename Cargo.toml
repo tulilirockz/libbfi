@@ -9,3 +9,6 @@ categories = ["simulation"]
 authors = ["Tulili <tulilirockz.pub@gmail.com>"]
 docs = "https://docs.rs/libbfi"
 homepage = "https://github.com/tulilirockz/libbfi"
+
+[dependencies]
+paste = "1.0.14"
