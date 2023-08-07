@@ -1,4 +1,3 @@
-use crate::interpreter::languages::*;
 use crate::interpreter::macros::*;
 use crate::matching::*;
 use crate::parser::*;
@@ -8,17 +7,22 @@ use std::io::{stdin, stdout, Write};
 
 /// A Standard brainfuck interpreter
 ///
-/// This provides an implementation of the `StdProgram` trait for the Brainfuck
-/// language.
 /// Consists of 8 instructions:
-/// + - Increment the memory cell under the pointer
-/// - - Decrement the memory cell under the pointer
-/// > - Move the pointer to the right
-/// < - Move the pointer to the left
-/// [ - Jump past the matching bracket if the cell under the pointer is 0
-/// ] - Jump back to the matching bracket
-/// . - Output the character signified by the cell at the pointer
-/// , - Input a character and store it in the cell at the pointer
+///
+///     + - Increment the memory cell under the pointer
+///     - - Decrement the memory cell under the pointer
+///     > - Move the pointer to the right
+///     < - Move the pointer to the left
+///     [ - Jump past the matching bracket if the cell under the pointer is 0
+///     ] - Jump back to the matching bracket
+///     . - Output the character signified by the cell at the pointer
+///     , - Input a character and store it in the cell at the pointer
+///
+/// Example:
+///
+/// ```bf
+/// >++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-]<+.
+/// ```
 pub struct Brainfuck;
 
 pub struct Memory<Dialect = Brainfuck> {
@@ -26,7 +30,7 @@ pub struct Memory<Dialect = Brainfuck> {
     pub pointer: usize,
     pub instruction: usize,
     pub instruction_stack: Vec<BFToken>,
-    state: std::marker::PhantomData<Dialect>,
+    pub state: std::marker::PhantomData<Dialect>,
 }
 
 impl Memory {
@@ -47,7 +51,6 @@ impl Memory<Brainfuck> {
 
 impl<Dialect> Memory<Dialect> {
     to_other_dialect!(bf, Brainfuck);
-    to_other_dialect!(ook, Ook);
     pub fn clean_env(&mut self) -> &mut Self {
         self.instruction = 0;
         self.pointer = 0;
