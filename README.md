@@ -8,7 +8,8 @@ Since any program interpreted by this library gets translated to tokens, transla
 ## Example Program
 
 ```rust
-use libbfi::interpreter::generic_dialect::{Memory, Ook};
+use libbfi::interpreter::languages::*;
+use libbfi::prelude::*;
 
 fn main() {
     let program: &str = ">++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-]<+.";
