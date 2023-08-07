@@ -1,3 +1,5 @@
+#![doc = r"Support for other brainfuck-like languages"]
+
 use crate::interpreter::generic_dialect::*;
 use crate::interpreter::macros::*;
 use crate::token::*;

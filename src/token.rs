@@ -1,3 +1,5 @@
+#![doc = "Definition for generic brainfuck token"]
+
 #[derive(Debug, PartialEq, Eq, Clone)]
 pub enum BFToken {
     CellAdd,

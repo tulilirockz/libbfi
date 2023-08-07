@@ -1,6 +1,7 @@
+#![doc = r"Includes definitions for running brainfuck programs (+ Brainfuck definition)"]
+
 use crate::interpreter::macros::*;
 use crate::matching::*;
-use crate::parser::*;
 use crate::token::*;
 
 use std::io::{stdin, stdout, Write};
@@ -31,6 +32,16 @@ pub struct Memory<Dialect = Brainfuck> {
     pub instruction: usize,
     pub instruction_stack: Vec<BFToken>,
     pub state: std::marker::PhantomData<Dialect>,
+}
+pub trait StdOperators {
+    fn op_ptr_left(&mut self);
+    fn op_ptr_right(&mut self);
+    fn op_add_to_cell(&mut self);
+    fn op_sub_from_cell(&mut self);
+    fn op_print_cell_as_char(&self);
+    fn op_input_to_cell(&mut self);
+    fn op_jump_forwards(&mut self);
+    fn op_jump_backwards(&mut self);
 }
 
 impl Memory {

@@ -1,6 +1,6 @@
 # LibBFI
 
-A library for interpreting and parsing Brainfuck code. 
+A library for interpreting and parsing Brainfuck code inspired by [libbf](https://docs.rs/libbf/0.1.3/libbf/)
 
 Includes support for regular Brainfuck and optinally any [trivial-implementation](https://esolangs.org/wiki/Trivial_brainfuck_substitution) (TODO)
 Since any program interpreted by this library gets translated to tokens, translating one program to another shouldn't be an issue. Brainfuck -> Ook, Ook -> Blub, Blub -> Brainfuck, for example. And you can also run them interchangeably, by adding tokens in any of their states.

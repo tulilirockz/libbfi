@@ -1,3 +1,5 @@
+#![doc = "Generic macros for making support for other languages"]
+
 macro_rules! to_other_dialect {
     ($method_name: ident, $type: ident) => {
         paste::item! {
