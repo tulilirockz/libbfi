@@ -61,8 +61,11 @@ macro_rules! multi_char_tokens {
 
             for i in (0..valid_chars.len()).step_by($cutoff) {
                 tokens.push(
-                    match format!("{}{}", valid_chars[i], valid_chars[i + 1]).as_str() {
-                        // TODO: make this work somehow
+                    match valid_chars[i..i + $cutoff]
+                        .iter()
+                        .collect::<String>()
+                        .as_str()
+                    {
                         $add => BFToken::CellAdd,
                         $sub => BFToken::CellSubtract,
                         $left => BFToken::PtrLeft,
