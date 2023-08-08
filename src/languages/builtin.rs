@@ -27,12 +27,13 @@ use crate::token::*;
 /// ```rust
 /// use libbfi::languages::builtin::*;
 /// use libbfi::prelude::*;
+/// use std::io::{stdin,stdout};
 ///
 /// let program: &str = ">++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-]<+.";
 /// let mut std_brainfuck_app = BrainfuckMemory::new();
 /// std_brainfuck_app.add_tokens(program.chars())
 ///      .expect("Failed parsing program")
-///      .run_full_stack()
+///      .run_full_stack(&mut stdin().lock(), &mut stdout())
 ///      .clean_env();
 /// ```
 pub struct Brainfuck;
@@ -54,6 +55,7 @@ pub struct Brainfuck;
 /// ```rust
 /// use libbfi::languages::builtin::*;
 /// use libbfi::prelude::*;
+/// use std::io::{stdin,stdout};
 ///
 /// let program: &str = "Ook. Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook! Ook? Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook? Ook! Ook! Ook? Ook! Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook! Ook. Ook. Ook. Ook! Ook.";
 /// let std_brainfuck_app = BrainfuckMemory::new();
@@ -61,7 +63,7 @@ pub struct Brainfuck;
 ///
 /// monke.add_tokens::<Ook>(program)
 ///      .expect("Failed parsing program")
-///      .run_full_stack()
+///      .run_full_stack(&mut stdin().lock(), &mut stdout())
 ///      .clean_env();
 /// ```
 pub struct Ook;
@@ -84,6 +86,7 @@ pub struct Ook;
 /// ```rust
 /// use libbfi::languages::builtin::*;
 /// use libbfi::prelude::*;
+/// use std::io::{stdin,stdout};
 ///
 /// let program: &str = "Blub. Blub? Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub! Blub? Blub? Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub? Blub! Blub! Blub? Blub! Blub? Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub! Blub. Blub. Blub. Blub! Blub.";
 /// let std_brainfuck_app = BrainfuckMemory::new();
@@ -91,7 +94,7 @@ pub struct Ook;
 ///
 /// fishe.add_tokens::<Blub>(program)
 ///      .expect("Failed parsing program")
-///      .run_full_stack()
+///      .run_full_stack(&mut stdin().lock(), &mut stdout())
 ///      .clean_env();
 /// ```
 pub struct Blub;

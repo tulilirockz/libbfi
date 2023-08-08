@@ -7,7 +7,7 @@ use crate::{
     prelude::*,
 };
 
-use std::io::{stdin, stdout, Write};
+use std::io::{BufRead, Write};
 
 #[derive(Clone, Debug)]
 pub struct BrainfuckMemory<Dialect = Brainfuck> {
@@ -57,14 +57,18 @@ impl<Dialect> BrainfuckParser for BrainfuckMemory<Dialect> {
         self.instruction_stack = Vec::new();
         self
     }
-    fn next_instruction(&mut self) -> &mut Self {
+    fn next_instruction(
+        &mut self,
+        reader: &mut impl BufRead,
+        writer: &mut impl Write,
+    ) -> &mut Self {
         match self.instruction_stack[self.instruction] {
             BFToken::CellAdd => self.op_add_to_cell(),
             BFToken::CellSubtract => self.op_sub_from_cell(),
             BFToken::PtrLeft => self.op_ptr_left(),
             BFToken::PtrRight => self.op_ptr_right(),
-            BFToken::Print => self.op_print_cell_as_char(),
-            BFToken::Input => self.op_input_to_cell(),
+            BFToken::Print => self.op_print_cell_as_char(writer),
+            BFToken::Input => self.op_input_to_cell(reader),
             BFToken::JumpForwards => self.op_jump_forwards(),
             BFToken::JumpBackwards => self.op_jump_backwards(),
             _ => {}
@@ -72,9 +76,9 @@ impl<Dialect> BrainfuckParser for BrainfuckMemory<Dialect> {
         self.instruction += 1;
         self
     }
-    fn run_full_stack(&mut self) -> &mut Self {
+    fn run_full_stack(&mut self, reader: &mut impl BufRead, writer: &mut impl Write) -> &mut Self {
         while self.instruction != self.instruction_stack.len() {
-            self.next_instruction();
+            self.next_instruction(reader, writer);
         }
         self
     }
@@ -93,13 +97,14 @@ impl<T> BrainfuckOperations for BrainfuckMemory<T> {
     fn op_ptr_right(&mut self) {
         self.pointer += 1;
     }
-    fn op_print_cell_as_char(&self) {
-        print!("{}", self.memory[self.pointer] as char);
-        stdout().flush().unwrap();
+    fn op_print_cell_as_char(&self, writer: &mut impl Write) {
+        write!(writer, "{}", self.memory[self.pointer] as char)
+            .expect("Error when writing data to writer");
+        writer.flush().unwrap();
     }
-    fn op_input_to_cell(&mut self) {
+    fn op_input_to_cell(&mut self, reader: &mut impl BufRead) {
         let mut input: String = String::new();
-        stdin().read_line(&mut input).expect("Failed to read line");
+        reader.read_line(&mut input).expect("Failed to read line");
         self.memory[self.pointer] = input.bytes().next().expect("no byte read");
     }
     fn op_jump_forwards(&mut self) {

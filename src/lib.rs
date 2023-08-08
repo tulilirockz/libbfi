@@ -8,6 +8,7 @@
 //! ```rust
 //! use libbfi::languages::builtin::*;
 //! use libbfi::prelude::*;
+//! use std::io::{stdin,stdout};
 //!
 //!     let program: &str = ">++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-]<+.";
 //!
@@ -36,7 +37,7 @@
 //!     std_brainfuck_app
 //!         .add_tokens(program.chars())
 //!         .expect("Failed parsing program")
-//!         .run_full_stack()
+//!         .run_full_stack(&mut stdin().lock(), &mut stdout())
 //!         .clean_env();
 //!
 //!     let mut ook_app = std_brainfuck_app.to_ook();
@@ -44,7 +45,7 @@
 //!     ook_app
 //!         .add_tokens::<Ook>(program_ook)
 //!         .expect("Failed parsing program")
-//!         .run_full_stack();
+//!         .run_full_stack(&mut stdin().lock(), &mut stdout());
 //! ```
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
