@@ -128,6 +128,14 @@
 ### Added
 - add clone and debug derivation to bfmemory struct
 
+## [4.2.0](https://github.com/tulilirockz/libbfi/compare/v4.1.0...v4.2.0) - 2023-08-08
+
+### Added
+- add support for input and output that is not stdin or stdout
+
+### Other
+- add missing docs for modules
+
 ## 1.0.0 (2023-07-31)
 
 
