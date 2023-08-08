@@ -1,7 +1,7 @@
 #![doc = r"Includes definitions for running trivial brainfuck programs (+ Brainfuck definition)"]
 
 use crate::{
-    languages::{custom::Custom, builtin::*},
+    languages::{builtin::*, custom::Custom},
     macros::token_conversion::to_other_dialect,
     matching::*,
     prelude::*,
@@ -9,6 +9,7 @@ use crate::{
 
 use std::io::{stdin, stdout, Write};
 
+#[derive(Clone, Debug)]
 pub struct BrainfuckMemory<Dialect = Brainfuck> {
     pub memory: [u8; 30000],
     pub pointer: usize,
