@@ -1,3 +1,5 @@
+#![doc = r"Support for custom languages defined by the user"]
+
 use crate::{prelude::BrainfuckMemory, token::*};
 
 pub struct Custom {

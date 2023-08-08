@@ -1,3 +1,5 @@
+#![doc = r"Contains everything necessary to write support for other brainfuck-like languages"]
+
 use crate::interpreter::bf::BrainfuckMemory;
 use crate::languages::builtin::*;
 use crate::languages::custom::Custom;
