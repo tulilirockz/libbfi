@@ -123,6 +123,11 @@
 ### Added
 - modularize implementation to allow outside extensions + doctests
 
+## [4.1.0](https://github.com/tulilirockz/libbfi/compare/v4.0.0...v4.1.0) - 2023-08-08
+
+### Added
+- add clone and debug derivation to bfmemory struct
+
 ## 1.0.0 (2023-07-31)
 
 
