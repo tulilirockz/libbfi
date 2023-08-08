@@ -118,6 +118,11 @@
 - add docsrs documentation and module docs
 - *(release)* re-add release-plz to gh workflows
 
+## [4.0.0](https://github.com/tulilirockz/LibBFI/compare/v3.0.1...v4.0.0) - 2023-08-08
+
+### Added
+- modularize implementation to allow outside extensions + doctests
+
 ## 1.0.0 (2023-07-31)
 
 

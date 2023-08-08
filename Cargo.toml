@@ -1,6 +1,6 @@
 [package]
 name = "libbfi"
-version = "3.0.1"
+version = "4.0.0"
 edition = "2021"
 description = "Extendable brainfuck interpreter library"
 license = "BSD-3-Clause"
