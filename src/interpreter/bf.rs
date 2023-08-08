@@ -1,75 +1,62 @@
-#![doc = r"Includes definitions for running brainfuck programs (+ Brainfuck definition)"]
+#![doc = r"Includes definitions for running trivial brainfuck programs (+ Brainfuck definition)"]
 
-use crate::interpreter::macros::*;
-use crate::matching::*;
-use crate::token::*;
+use crate::{
+    languages::{custom::Custom, builtin::*},
+    macros::token_conversion::to_other_dialect,
+    matching::*,
+    prelude::*,
+};
 
 use std::io::{stdin, stdout, Write};
 
-/// A Standard brainfuck interpreter
-///
-/// Consists of 8 instructions:
-///
-///     + - Increment the memory cell under the pointer
-///     - - Decrement the memory cell under the pointer
-///     > - Move the pointer to the right
-///     < - Move the pointer to the left
-///     [ - Jump past the matching bracket if the cell under the pointer is 0
-///     ] - Jump back to the matching bracket
-///     . - Output the character signified by the cell at the pointer
-///     , - Input a character and store it in the cell at the pointer
-///
-/// Example:
-///
-/// ```bf
-/// >++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-]<+.
-/// ```
-pub struct Brainfuck;
-
-pub struct Memory<Dialect = Brainfuck> {
+pub struct BrainfuckMemory<Dialect = Brainfuck> {
     pub memory: [u8; 30000],
     pub pointer: usize,
     pub instruction: usize,
     pub instruction_stack: Vec<BFToken>,
     pub state: std::marker::PhantomData<Dialect>,
 }
-pub trait StdOperators {
-    fn op_ptr_left(&mut self);
-    fn op_ptr_right(&mut self);
-    fn op_add_to_cell(&mut self);
-    fn op_sub_from_cell(&mut self);
-    fn op_print_cell_as_char(&self);
-    fn op_input_to_cell(&mut self);
-    fn op_jump_forwards(&mut self);
-    fn op_jump_backwards(&mut self);
-}
 
-impl Memory {
+impl BrainfuckMemory {
     pub fn new() -> Self {
-        return Self {
+        Self {
             instruction: 0,
             pointer: 0,
             memory: [0x00; 30000],
             instruction_stack: Vec::new(),
             state: Default::default(),
-        };
+        }
     }
 }
 
-impl Memory<Brainfuck> {
-    single_char_tokens!('+', '-', '<', '>', '.', ',', '[', ']');
+impl Default for BrainfuckMemory {
+    fn default() -> Self {
+        Self {
+            instruction: 0,
+            pointer: 0,
+            memory: [0x00; 30000],
+            instruction_stack: Vec::new(),
+            state: Default::default(),
+        }
+    }
 }
 
-impl<Dialect> Memory<Dialect> {
+impl<Dialect> BrainfuckTranslator for BrainfuckMemory<Dialect> {
     to_other_dialect!(bf, Brainfuck);
-    pub fn clean_env(&mut self) -> &mut Self {
+    to_other_dialect!(ook, Ook);
+    to_other_dialect!(blub, Blub);
+    to_other_dialect!(custom, Custom);
+}
+
+impl<Dialect> BrainfuckParser for BrainfuckMemory<Dialect> {
+    fn clean_env(&mut self) -> &mut Self {
         self.instruction = 0;
         self.pointer = 0;
         self.memory = [0x00; 30000];
         self.instruction_stack = Vec::new();
-        return self;
+        self
     }
-    pub fn next_instruction(&mut self) -> &mut Self {
+    fn next_instruction(&mut self) -> &mut Self {
         match self.instruction_stack[self.instruction] {
             BFToken::CellAdd => self.op_add_to_cell(),
             BFToken::CellSubtract => self.op_sub_from_cell(),
@@ -82,17 +69,17 @@ impl<Dialect> Memory<Dialect> {
             _ => {}
         }
         self.instruction += 1;
-        return self;
+        self
     }
-    pub fn run_full_stack(&mut self) -> &mut Self {
+    fn run_full_stack(&mut self) -> &mut Self {
         while self.instruction != self.instruction_stack.len() {
             self.next_instruction();
         }
-        return self;
+        self
     }
 }
 
-impl<T> StdOperators for Memory<T> {
+impl<T> BrainfuckOperations for BrainfuckMemory<T> {
     fn op_add_to_cell(&mut self) {
         self.memory[self.pointer] = self.memory[self.pointer].wrapping_add(1);
     }
@@ -111,10 +98,7 @@ impl<T> StdOperators for Memory<T> {
     }
     fn op_input_to_cell(&mut self) {
         let mut input: String = String::new();
-        stdin()
-            .read_line(&mut input)
-            .ok()
-            .expect("Failed to read line");
+        stdin().read_line(&mut input).expect("Failed to read line");
         self.memory[self.pointer] = input.bytes().next().expect("no byte read");
     }
     fn op_jump_forwards(&mut self) {

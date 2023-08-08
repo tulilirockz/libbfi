@@ -1,13 +1,12 @@
+use libbfi::interpreter::bf_features::*;
 #[cfg(test)]
-use libbfi::interpreter::generic_dialect::Memory;
-use libbfi::{
-    interpreter::languages::{Custom, Ook},
-    token::BFToken,
-};
+use libbfi::interpreter::bf::BrainfuckMemory;
+use libbfi::prelude::*;
+use libbfi::{languages::custom::*, languages::builtin::Ook};
 
 #[test]
 fn test_adding_characters() {
-    let mut binding = Memory::new();
+    let mut binding = BrainfuckMemory::new();
     let tokens = binding.add_tokens("+a-b>c<d[e]f".chars()).unwrap();
 
     assert_eq!(
@@ -25,11 +24,11 @@ fn test_adding_characters() {
 
 #[test]
 fn test_to_ook() {
-    let mut bind = Memory::new();
-    let tokens: &mut Memory = bind.add_tokens("+a-b>c<d[e]f".chars()).expect("amogus");
+    let mut bind = BrainfuckMemory::new();
+    let tokens: &mut BrainfuckMemory = bind.add_tokens("+a-b>c<d[e]f".chars()).expect("amogus");
 
-    let mut ook: Memory<Ook> = tokens.to_ook();
-    let ooktoken: &mut Memory<Ook> = ook.add_tokens::<Ook>("Ook. Ook. Ook. Ook.").unwrap();
+    let mut ook: BrainfuckMemory<Ook> = tokens.to_ook();
+    let ooktoken: &mut BrainfuckMemory<Ook> = ook.add_tokens::<Ook>("Ook. Ook. Ook. Ook.").unwrap();
 
     assert_eq!(
         ooktoken.instruction_stack,
@@ -61,7 +60,7 @@ fn test_custom_type() {
 
     let custom_program = "pmlrxifb";
 
-    let hi = Memory::new();
+    let hi = BrainfuckMemory::new();
     let mut program_runner = hi.to_custom();
     program_runner
         .add_tokens(&mytype, custom_program.chars())

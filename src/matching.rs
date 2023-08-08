@@ -35,7 +35,7 @@ pub fn find_matching<T: Sized + PartialEq>(
             return Some(single_obj);
         }
     }
-    return None;
+    None
 }
 
 pub fn find_matching_substring<T: Eq + Sized + Display>(
@@ -55,7 +55,7 @@ pub fn find_matching_substring<T: Eq + Sized + Display>(
     };
 
     for index in main_iterator {
-        if !(index % substr_start.len() == 0) {
+        if index % substr_start.len() != 0 {
             continue;
         }
 
@@ -81,5 +81,5 @@ pub fn find_matching_substring<T: Eq + Sized + Display>(
             return Some(index);
         }
     }
-    return None;
+    None
 }

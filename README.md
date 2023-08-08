@@ -8,10 +8,8 @@ Since any program interpreted by this library gets translated to tokens, transla
 ## Example Program
 
 ```rust
-use libbfi::interpreter::languages::*;
+use libbfi::languages::builtin::*;
 use libbfi::prelude::*;
-
-fn main() {
     let program: &str = ">++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-]<+.";
 
     let program_ook: &str =
@@ -34,7 +32,7 @@ fn main() {
      Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook!
      Ook! Ook. Ook. Ook? Ook. Ook? Ook. Ook. Ook! Ook.";
 
-    let mut std_brainfuck_app = Memory::new();
+    let mut std_brainfuck_app = BrainfuckMemory::new();
 
     std_brainfuck_app
         .add_tokens(program.chars())
@@ -43,10 +41,9 @@ fn main() {
         .clean_env();
 
     let mut ook_app = std_brainfuck_app.to_ook();
-
+    
     ook_app
         .add_tokens::<Ook>(program_ook)
         .expect("Failed parsing program")
         .run_full_stack();
-}
 ```

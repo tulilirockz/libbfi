@@ -1,21 +1,3 @@
-#![doc = "Generic macros for making support for other languages"]
-
-macro_rules! to_other_dialect {
-    ($method_name: ident, $type: ident) => {
-        paste::item! {
-            pub fn [< to_ $method_name >](&self) -> Memory<$type> {
-                return Memory::<$type> {
-                    instruction: self.instruction,
-                    instruction_stack: self.instruction_stack.clone(),
-                    memory: self.memory,
-                    pointer: self.pointer,
-                    state: std::marker::PhantomData::<$type>,
-                };
-            }
-        }
-    };
-}
-
 macro_rules! single_char_tokens {
     ($add: expr, $sub: expr, $left: expr, $right: expr, $print: expr, $input: expr, $forward: expr, $backward: expr) => {
         pub fn add_tokens<T>(&mut self, iterator: T) -> Result<&mut Self, TokenParseError>
@@ -108,7 +90,7 @@ macro_rules! token_to_type_dialect {
         }
     };
 }
+
 pub(crate) use multi_char_tokens;
 pub(crate) use single_char_tokens;
-pub(crate) use to_other_dialect;
 pub(crate) use token_to_type_dialect;
