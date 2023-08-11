@@ -1,4 +1,5 @@
 #![doc = "Definition for generic brainfuck token + everything necessary to write tokenizers"]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum BFToken {

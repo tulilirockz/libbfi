@@ -1,4 +1,5 @@
 #![doc = r"Implementations as to how a standard brainfuck interpreter should operate"]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 use crate::{matching::*, prelude::*, runtime::*};
 

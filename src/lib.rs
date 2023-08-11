@@ -1,6 +1,6 @@
 //! A library for interpreting and parsing Brainfuck code inspired by libbf.
 //!
-//! Includes support for regular Brainfuck and optinally any trivial-implementation of it.
+//! Includes support for regular Brainfuck and optionally any trivial-implementation of it.
 //! Since any program interpreted by this library gets translated to tokens, translating one program to another shouldn't be an issue. Brainfuck -> Ook, Ook -> Blub, Blub -> Brainfuck, for example. And you can also run them interchangeably, by adding tokens in any of their states.
 //!
 //! ## Example Program

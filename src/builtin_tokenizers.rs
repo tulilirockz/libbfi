@@ -1,4 +1,6 @@
 #![doc = r"Support for trivial brainfuck languages"]
+#![cfg_attr(docsrs, feature(doc_cfg))]
+
 use crate::token::*;
 
 /// A Standard brainfuck interpreter

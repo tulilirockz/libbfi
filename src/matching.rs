@@ -1,4 +1,5 @@
 #![doc = "Functions for character/str matching (brackets in BF)"]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 use std::fmt::Display;
 

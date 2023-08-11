@@ -1,4 +1,5 @@
 #![doc = r"Traits and definitions for building a brainfuck interpreter"]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 use std::{io::BufRead, io::Write};
 

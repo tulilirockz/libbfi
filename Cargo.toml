@@ -9,5 +9,9 @@ categories = ["simulation"]
 authors = ["Tulili <tulilirockz.pub@gmail.com>"]
 homepage = "https://github.com/tulilirockz/libbfi"
 
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 paste = "1.0.14"
