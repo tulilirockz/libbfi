@@ -136,6 +136,12 @@
 ### Other
 - add missing docs for modules
 
+## [5.0.0](https://github.com/tulilirockz/LibBFI/compare/v4.2.0...v5.0.0) - 2023-08-11
+
+### Other
+- start implementing docrs full support
+- [**breaking**] use DI-like system for parsing tokens + builtins are not strictly necessary + better module organization
+
 ## 1.0.0 (2023-07-31)
 
 
