@@ -6,14 +6,13 @@
 //! ## Example Program
 //!
 //! ```rust
-//! use libbfi::languages::builtin::*;
 //! use libbfi::prelude::*;
 //! use std::io::{stdin,stdout};
 //!
-//!     let program: &str = ">++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-]<+.";
+//!     let program: String = String::from(">++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-]<+.");
 //!
-//!     let program_ook: &str =
-//!         "Ook. Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook.
+//!     let program_ook: String =
+//!         String::from("Ook. Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook.
 //!      Ook. Ook. Ook. Ook. Ook! Ook? Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook.
 //!      Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook? Ook! Ook! Ook? Ook! Ook? Ook.
 //!      Ook! Ook. Ook. Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook.
@@ -30,47 +29,32 @@
 //!      Ook? Ook. Ook? Ook. Ook? Ook. Ook? Ook. Ook! Ook. Ook. Ook. Ook. Ook. Ook. Ook.
 //!      Ook! Ook. Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook.
 //!      Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook! Ook!
-//!      Ook! Ook. Ook. Ook? Ook. Ook? Ook. Ook. Ook! Ook.";
+//!      Ook! Ook. Ook. Ook? Ook. Ook? Ook. Ook. Ook! Ook.");
 //!
-//!     let mut std_brainfuck_app = BrainfuckMemory::new();
+//!     let mut std_brainfuck_app = Memory::new();
 //!
 //!     std_brainfuck_app
-//!         .add_tokens(program.chars())
-//!         .expect("Failed parsing program")
+//!         .add_tokens(Brainfuck::to_tokens(program).expect("Failed parsing program"))
 //!         .run_full_stack(&mut stdin().lock(), &mut stdout())
 //!         .clean_env();
-//!
-//!     let mut ook_app = std_brainfuck_app.to_ook();
-//!
-//!     ook_app
-//!         .add_tokens::<Ook>(program_ook)
-//!         .expect("Failed parsing program")
+//!     
+//!     std_brainfuck_app
+//!         .add_tokens(Ook::to_tokens(program_ook).expect("Failed parsing program"))
 //!         .run_full_stack(&mut stdin().lock(), &mut stdout());
 //! ```
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-pub mod interpreter {
-    pub mod bf;
-    pub mod bf_features;
-}
-
-pub mod macros {
-    pub mod token_conversion;
-    pub mod token_gen;
-}
-
-pub mod languages {
-    pub mod builtin;
-    pub mod custom;
-}
-
+pub mod builtin_tokenizers;
+pub mod interpreter;
 pub mod matching;
+pub mod runtime;
 pub mod token;
 
 // Import this for necessary support to run the main Brainfuck interpreter
 pub mod prelude {
-    pub use crate::interpreter::bf::*;
-    pub use crate::interpreter::bf_features::*;
+    pub use crate::builtin_tokenizers::*;
+    pub use crate::interpreter::*;
     pub use crate::matching;
-    pub use crate::token::{BFToken, TokenParseError};
+    pub use crate::runtime::*;
+    pub use crate::token::*;
 }

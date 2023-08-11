@@ -1,55 +1,32 @@
-#![doc = r"Includes definitions for running trivial brainfuck programs (+ Brainfuck definition)"]
+#![doc = r"Implementations as to how a standard brainfuck interpreter should operate"]
 
-use crate::{
-    languages::{builtin::*, custom::Custom},
-    macros::token_conversion::to_other_dialect,
-    matching::*,
-    prelude::*,
-};
+use crate::{matching::*, prelude::*, runtime::*};
 
 use std::io::{BufRead, Write};
 
-#[derive(Clone, Debug)]
-pub struct BrainfuckMemory<Dialect = Brainfuck> {
-    pub memory: [u8; 30000],
-    pub pointer: usize,
-    pub instruction: usize,
-    pub instruction_stack: Vec<BFToken>,
-    pub state: std::marker::PhantomData<Dialect>,
-}
-
-impl BrainfuckMemory {
+impl Memory {
     pub fn new() -> Self {
         Self {
             instruction: 0,
             pointer: 0,
             memory: [0x00; 30000],
             instruction_stack: Vec::new(),
-            state: Default::default(),
         }
     }
 }
 
-impl Default for BrainfuckMemory {
+impl Default for Memory {
     fn default() -> Self {
         Self {
             instruction: 0,
             pointer: 0,
             memory: [0x00; 30000],
             instruction_stack: Vec::new(),
-            state: Default::default(),
         }
     }
 }
 
-impl<Dialect> BrainfuckTranslator for BrainfuckMemory<Dialect> {
-    to_other_dialect!(bf, Brainfuck);
-    to_other_dialect!(ook, Ook);
-    to_other_dialect!(blub, Blub);
-    to_other_dialect!(custom, Custom);
-}
-
-impl<Dialect> BrainfuckParser for BrainfuckMemory<Dialect> {
+impl Runner for Memory {
     fn clean_env(&mut self) -> &mut Self {
         self.instruction = 0;
         self.pointer = 0;
@@ -82,9 +59,13 @@ impl<Dialect> BrainfuckParser for BrainfuckMemory<Dialect> {
         }
         self
     }
+    fn add_tokens(&mut self, tokens: Vec<BFToken>) -> &mut Self {
+        self.instruction_stack.extend(tokens);
+        self
+    }
 }
 
-impl<T> BrainfuckOperations for BrainfuckMemory<T> {
+impl Operator for Memory {
     fn op_add_to_cell(&mut self) {
         self.memory[self.pointer] = self.memory[self.pointer].wrapping_add(1);
     }
@@ -104,7 +85,10 @@ impl<T> BrainfuckOperations for BrainfuckMemory<T> {
     }
     fn op_input_to_cell(&mut self, reader: &mut impl BufRead) {
         let mut input: String = String::new();
-        reader.read_line(&mut input).expect("Failed to read line");
+
+        reader
+            .read_to_string(&mut input)
+            .expect("Failed to read line");
         self.memory[self.pointer] = input.bytes().next().expect("no byte read");
     }
     fn op_jump_forwards(&mut self) {

@@ -1,7 +1,4 @@
 #![doc = r"Support for trivial brainfuck languages"]
-
-use crate::interpreter::bf::*;
-use crate::macros::token_gen::*;
 use crate::token::*;
 
 /// A Standard brainfuck interpreter
@@ -25,14 +22,13 @@ use crate::token::*;
 /// # Example:
 ///
 /// ```rust
-/// use libbfi::languages::builtin::*;
 /// use libbfi::prelude::*;
 /// use std::io::{stdin,stdout};
 ///
-/// let program: &str = ">++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-]<+.";
-/// let mut std_brainfuck_app = BrainfuckMemory::new();
-/// std_brainfuck_app.add_tokens(program.chars())
-///      .expect("Failed parsing program")
+/// let program: String = String::from(">++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-]<+.");
+/// let mut std_brainfuck_app = Memory::new();
+/// std_brainfuck_app.add_tokens(Brainfuck::to_tokens(program)
+///      .expect("Failed parsing program"))
 ///      .run_full_stack(&mut stdin().lock(), &mut stdout())
 ///      .clean_env();
 /// ```
@@ -53,16 +49,13 @@ pub struct Brainfuck;
 /// # Example:
 ///
 /// ```rust
-/// use libbfi::languages::builtin::*;
 /// use libbfi::prelude::*;
 /// use std::io::{stdin,stdout};
 ///
-/// let program: &str = "Ook. Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook! Ook? Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook? Ook! Ook! Ook? Ook! Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook! Ook. Ook. Ook. Ook! Ook.";
-/// let std_brainfuck_app = BrainfuckMemory::new();
-/// let mut monke: BrainfuckMemory<Ook> = std_brainfuck_app.to_ook();
+/// let program: String = String::from("Ook. Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook! Ook? Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook? Ook! Ook! Ook? Ook! Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook! Ook. Ook. Ook. Ook! Ook.");
+/// let mut monke = Memory::new();
 ///
-/// monke.add_tokens::<Ook>(program)
-///      .expect("Failed parsing program")
+/// monke.add_tokens(Ook::to_tokens(program).expect("Failed parsing program"))
 ///      .run_full_stack(&mut stdin().lock(), &mut stdout())
 ///      .clean_env();
 /// ```
@@ -84,29 +77,47 @@ pub struct Ook;
 /// # Example:
 ///
 /// ```rust
-/// use libbfi::languages::builtin::*;
 /// use libbfi::prelude::*;
 /// use std::io::{stdin,stdout};
 ///
-/// let program: &str = "Blub. Blub? Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub! Blub? Blub? Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub? Blub! Blub! Blub? Blub! Blub? Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub! Blub. Blub. Blub. Blub! Blub.";
-/// let std_brainfuck_app = BrainfuckMemory::new();
-/// let mut fishe: BrainfuckMemory<Blub> = std_brainfuck_app.to_blub();
+/// let program: String = String::from("Blub. Blub? Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub! Blub? Blub? Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub? Blub! Blub! Blub? Blub! Blub? Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub! Blub. Blub. Blub. Blub! Blub.");
+/// let mut fishe = Memory::new();
 ///
-/// fishe.add_tokens::<Blub>(program)
-///      .expect("Failed parsing program")
+/// fishe.add_tokens(Blub::to_tokens(program).expect("Failed parsing program"))
 ///      .run_full_stack(&mut stdin().lock(), &mut stdout())
 ///      .clean_env();
 /// ```
 pub struct Blub;
 
-impl BrainfuckMemory<Brainfuck> {
-    single_char_tokens!('+', '-', '<', '>', '.', ',', '[', ']');
+impl Tokenizer for Brainfuck {
+    single_char_tokenizer!(char, '+', '-', '<', '>', '.', ',', '[', ']');
+    token_to_string!("+", "-", "<", ">", ".", ",", "[", "]");
 }
 
-impl BrainfuckMemory<Ook> {
-    multi_char_tokens!(2, ".!?", "..", "!!", "?.", ".?", "!.", ".!", "!?", "?!");
+impl Tokenizer for Ook {
+    multi_char_tokenizer!(str, 2, ".!?", "..", "!!", "?.", ".?", "!.", ".!", "!?", "?!");
+    token_to_string!(
+        "Ook. Ook.",
+        "Ook! Ook!",
+        "Ook? Ook.",
+        "Ook. Ook?",
+        "Ook! Ook.",
+        "Ook. Ook!",
+        "Ook! Ook?",
+        "Ook? Ook!"
+    );
 }
 
-impl BrainfuckMemory<Blub> {
-    multi_char_tokens!(2, ".!?", "..", "!!", "?.", ".?", "!.", ".!", "!?", "?!");
+impl Tokenizer for Blub {
+    multi_char_tokenizer!(str, 2, ".!?", "..", "!!", "?.", ".?", "!.", ".!", "!?", "?!");
+    token_to_string!(
+        "Blub. Blub.",
+        "Blub! Blub!",
+        "Blub? Blub.",
+        "Blub. Blub?",
+        "Blub! Blub.",
+        "Blub. Blub!",
+        "Blub! Blub?",
+        "Blub? Blub!"
+    );
 }
