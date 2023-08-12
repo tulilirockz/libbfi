@@ -142,6 +142,11 @@
 - start implementing docrs full support
 - [**breaking**] use DI-like system for parsing tokens + builtins are not strictly necessary + better module organization
 
+## [6.0.0](https://github.com/tulilirockz/LibBFI/compare/v5.0.0...v6.0.0) - 2023-08-12
+
+### Other
+- separate implementations for brainfuck runtimes and BFMemory
+
 ## 1.0.0 (2023-07-31)
 
 
