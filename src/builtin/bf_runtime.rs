@@ -1,11 +1,20 @@
-#![doc = r"Implementations as to how a standard brainfuck interpreter should operate"]
-#![cfg_attr(docsrs, feature(doc_cfg))]
-
-use crate::{matching::*, prelude::*, runtime::*};
+use crate::{
+    matching::{find_matching, IteratorOrder},
+    runtime::{Operator, Runner},
+    token::BFToken,
+};
 
 use std::io::{BufRead, Write};
 
-impl Memory {
+#[derive(Debug, Clone)]
+pub struct BrainfuckRuntime {
+    pub pointer: usize,
+    pub instruction: usize,
+    pub instruction_stack: Vec<BFToken>,
+    pub memory: [u8; 30000],
+}
+
+impl BrainfuckRuntime {
     pub fn new() -> Self {
         Self {
             instruction: 0,
@@ -16,18 +25,13 @@ impl Memory {
     }
 }
 
-impl Default for Memory {
+impl Default for BrainfuckRuntime {
     fn default() -> Self {
-        Self {
-            instruction: 0,
-            pointer: 0,
-            memory: [0x00; 30000],
-            instruction_stack: Vec::new(),
-        }
+        BrainfuckRuntime::new()
     }
 }
 
-impl Runner for Memory {
+impl Runner for BrainfuckRuntime {
     fn clean_env(&mut self) -> &mut Self {
         self.instruction = 0;
         self.pointer = 0;
@@ -66,7 +70,7 @@ impl Runner for Memory {
     }
 }
 
-impl Operator for Memory {
+impl Operator for BrainfuckRuntime {
     fn op_add_to_cell(&mut self) {
         self.memory[self.pointer] = self.memory[self.pointer].wrapping_add(1);
     }

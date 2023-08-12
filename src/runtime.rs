@@ -1,8 +1,13 @@
 #![doc = r"Traits and definitions for building a brainfuck interpreter"]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-use std::{io::BufRead, io::Write};
+//! Sharing memory should work like this:
+//! let env = BrainfuckRuntime::new().add_tokens(program).run_full_stack().clean_env()
+//! let runtime = BoofRuntime::new().add_tokens(program);
+//! runtime.memory = env.memory;
+//! runtime.run_full_stack().clean_env()
 
+use std::{io::BufRead, io::Write};
 use crate::token::BFToken;
 
 pub trait Operator {
@@ -22,12 +27,4 @@ pub trait Runner: Clone + Sized {
     fn next_instruction(&mut self, reader: &mut impl BufRead, writer: &mut impl Write)
         -> &mut Self;
     fn run_full_stack(&mut self, reader: &mut impl BufRead, writer: &mut impl Write) -> &mut Self;
-}
-
-#[derive(Debug, Clone)]
-pub struct Memory {
-    pub memory: [u8; 30000],
-    pub pointer: usize,
-    pub instruction: usize,
-    pub instruction_stack: Vec<BFToken>,
 }

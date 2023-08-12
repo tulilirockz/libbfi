@@ -28,7 +28,7 @@ use crate::token::*;
 /// use std::io::{stdin,stdout};
 ///
 /// let program: String = String::from(">++++++++[<+++++++++>-]<.>++++[<+++++++>-]<+.+++++++..+++.>>++++++[<+++++++>-]<++.------------.>++++++[<+++++++++>-]<+.<.+++.------.--------.>>>++++[<++++++++>-]<+.");
-/// let mut std_brainfuck_app = Memory::new();
+/// let mut std_brainfuck_app = BrainfuckRuntime::new();
 /// std_brainfuck_app.add_tokens(Brainfuck::to_tokens(program)
 ///      .expect("Failed parsing program"))
 ///      .run_full_stack(&mut stdin().lock(), &mut stdout())
@@ -55,7 +55,7 @@ pub struct Brainfuck;
 /// use std::io::{stdin,stdout};
 ///
 /// let program: String = String::from("Ook. Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook! Ook? Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook? Ook! Ook! Ook? Ook! Ook? Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook. Ook! Ook. Ook. Ook. Ook! Ook.");
-/// let mut monke = Memory::new();
+/// let mut monke = BrainfuckRuntime::new();
 ///
 /// monke.add_tokens(Ook::to_tokens(program).expect("Failed parsing program"))
 ///      .run_full_stack(&mut stdin().lock(), &mut stdout())
@@ -83,7 +83,7 @@ pub struct Ook;
 /// use std::io::{stdin,stdout};
 ///
 /// let program: String = String::from("Blub. Blub? Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub! Blub? Blub? Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub? Blub! Blub! Blub? Blub! Blub? Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub. Blub! Blub. Blub. Blub. Blub! Blub.");
-/// let mut fishe = Memory::new();
+/// let mut fishe = BrainfuckRuntime::new();
 ///
 /// fishe.add_tokens(Blub::to_tokens(program).expect("Failed parsing program"))
 ///      .run_full_stack(&mut stdin().lock(), &mut stdout())

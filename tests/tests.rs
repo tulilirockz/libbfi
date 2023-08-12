@@ -5,12 +5,12 @@ const DEFAULT_TEST_ERROR: &str = "Failed to read tokens";
 
 #[test]
 fn test_adding_characters() {
-    let mut memory = Memory::new();
-    memory
+    let mut runtime = BrainfuckRuntime::new();
+    runtime
         .add_tokens(Brainfuck::to_tokens(String::from("+a-b>c<d[e]f")).expect(DEFAULT_TEST_ERROR));
 
     assert_eq!(
-        memory.instruction_stack,
+        runtime.instruction_stack,
         vec![
             BFToken::CellAdd,
             BFToken::CellSubtract,
@@ -24,7 +24,7 @@ fn test_adding_characters() {
 
 #[test]
 fn test_to_ook() {
-    let mut memory = Memory::new();
+    let mut memory = BrainfuckRuntime::new();
     memory
         .add_tokens(Brainfuck::to_tokens(String::from("+a-b>c<d[e]f")).expect(DEFAULT_TEST_ERROR))
         .add_tokens(Ook::to_tokens(String::from("Ook. Ook. Ook. Ook.")).expect(DEFAULT_TEST_ERROR));
