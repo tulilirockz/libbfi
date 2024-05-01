@@ -15,15 +15,13 @@ pub struct BrainfuckRuntime {
 }
 
 impl BrainfuckRuntime {
-    /// Constructs a new `BrainfuckRuntime` instance with a default tape length of 30,000 cells.
-    /// Each cell is initialized to 0. This default size is typically sufficient for many Brainfuck programs.
+    /// Creates a new Brainfuck runtime with a default 30,000-cell memory.
     pub fn new() -> Self {
         Self::with_memory_size(30_000)
     }
 
-    /// Constructs a `BrainfuckRuntime` with a specified memory size (tape length).
-    /// Initializes the tape with `size` cells, each set to 0. Allows for the creation of a runtime
-    /// with custom memory size, tailored to the needs of specific Brainfuck programs.
+    /// Creates a Brainfuck runtime with a custom memory size.
+    /// * `size` - Number of cells in the runtime memory.
     pub fn with_memory_size(size: usize) -> Self {
         Self {
             instruction: 0,
